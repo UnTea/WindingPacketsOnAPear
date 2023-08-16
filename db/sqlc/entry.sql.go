@@ -20,7 +20,7 @@ INSERT INTO entries (
 
 type CreateEntryParams struct {
 	AccountID int64   `json:"account_id"`
-	Amount    float64 `json:"amount"`
+	Amount    float32 `json:"amount"`
 }
 
 func (q *Queries) CreateEntry(ctx context.Context, arg CreateEntryParams) (Entry, error) {

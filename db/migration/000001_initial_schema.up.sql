@@ -1,7 +1,7 @@
 CREATE TABLE "accounts" (
     "id" bigserial PRIMARY KEY,
     "owner"      varchar NOT NULL,
-    "balance"    double precision NOT NULL,
+    "balance"    real NOT NULL,
     "currency"   varchar NOT NULL,
     "created_at" timestamptz NOT NULL DEFAULT (now())
 );
@@ -9,7 +9,7 @@ CREATE TABLE "accounts" (
 CREATE TABLE "entries" (
     "id" bigserial PRIMARY KEY,
     "account_id" bigint NOT NULL,
-    "amount"     double precision NOT NULL,
+    "amount"     real NOT NULL,
     "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
