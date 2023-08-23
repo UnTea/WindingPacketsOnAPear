@@ -1,5 +1,11 @@
-postgres:
+initps:
 	docker run --name postgres_db -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -d postgres:15-alpine3.18
+
+startps:
+	docker start postgres_db
+
+stopps:
+	docker stop postgres_db
 
 createdb:
 	docker exec -it postgres_db createdb --username=root --owner=root simple_bank
