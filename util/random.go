@@ -10,8 +10,8 @@ func init() {
 	rand.New(rand.NewSource(time.Now().UnixNano()))
 }
 
-func randomFloat32(min, max float32) float32 {
-	return min + rand.Float32()*(max-min)
+func randomInt(min, max int64) int64 {
+	return min + rand.Int63n(max-min+1)
 }
 
 func RandomOwner() string {
@@ -628,17 +628,13 @@ func RandomOwner() string {
 
 	var sb strings.Builder
 
-	sb.WriteString(
-		names[rand.Intn(n)] + " " +
-			surnames[rand.Intn(s)] + " " +
-			professions[rand.Intn(p)],
-	)
+	sb.WriteString(names[rand.Intn(n)] + " " + surnames[rand.Intn(s)] + " " + professions[rand.Intn(p)])
 
 	return sb.String()
 }
 
-func RandomMoney() float32 {
-	return randomFloat32(0.0, 300.0)
+func RandomMoney() int64 {
+	return randomInt(0, 300)
 }
 
 func RandomCurrency() string {
