@@ -1,3 +1,6 @@
+mockgen:
+	mockgen -package mockdb -destination db/mock/store.go github.com/UnTea/WindingPacketsOnAPear/db/sqlc Store
+
 initps:
 	docker run --name postgres_db -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -d postgres:15-alpine3.18
 
@@ -28,4 +31,4 @@ server:
 test:
 	go test -v -cover ./...
 
-.PHONY: postgres createdb dropdb migrateup migratedown sqlc server
+.PHONY: mockgen postgres createdb dropdb migrateup migratedown sqlc server

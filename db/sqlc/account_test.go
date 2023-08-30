@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/UnTea/WindingPacketsOnAPear/util"
 	"github.com/stretchr/testify/require"
-	"simplebank/util"
 )
 
 func createRandomAccount(t *testing.T) Account {

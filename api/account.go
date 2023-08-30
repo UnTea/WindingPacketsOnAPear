@@ -5,8 +5,8 @@ import (
 	"errors"
 	"net/http"
 
+	db "github.com/UnTea/WindingPacketsOnAPear/db/sqlc"
 	"github.com/gin-gonic/gin"
-	db "simplebank/db/sqlc"
 )
 
 type createAccountsRequest struct {

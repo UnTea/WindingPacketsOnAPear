@@ -4,10 +4,11 @@ import (
 	"database/sql"
 	"log"
 	"os"
-	"simplebank/util"
 	"testing"
 
 	_ "github.com/lib/pq"
+
+	"github.com/UnTea/WindingPacketsOnAPear/util"
 )
 
 var testQueries *Queries

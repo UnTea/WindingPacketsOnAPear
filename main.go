@@ -3,11 +3,12 @@ package main
 import (
 	"database/sql"
 	"log"
-	"simplebank/util"
 
 	_ "github.com/lib/pq"
-	"simplebank/api"
-	db "simplebank/db/sqlc"
+
+	"github.com/UnTea/WindingPacketsOnAPear/api"
+	db "github.com/UnTea/WindingPacketsOnAPear/db/sqlc"
+	"github.com/UnTea/WindingPacketsOnAPear/util"
 )
 
 func main() {

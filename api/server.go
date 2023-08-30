@@ -1,17 +1,18 @@
 package api
 
 import (
+	db "github.com/UnTea/WindingPacketsOnAPear/db/sqlc"
 	"github.com/gin-gonic/gin"
-	db "simplebank/db/sqlc"
+	"log"
 )
 
 // Server server HTTP requests for banking service
 type Server struct {
-	store  *db.Store
+	store  db.Store
 	router *gin.Engine
 }
 
-func NewServer(store *db.Store) *Server {
+func NewServer(store db.Store) *Server {
 	server := &Server{store: store}
 	router := gin.Default()
 
@@ -21,8 +22,9 @@ func NewServer(store *db.Store) *Server {
 	router.DELETE("/accounts/:id", server.deleteAccount)
 
 	server.router = router
-	if err := server.router.SetTrustedProxies(nil); err != nil {
-
+	err := server.router.SetTrustedProxies(nil)
+	if err != nil {
+		log.Println("cannot set trusted proxies parameter: ", err)
 	}
 
 	return server
