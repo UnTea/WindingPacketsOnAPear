@@ -7,16 +7,16 @@ import (
 )
 
 var currencies, c = []string{
-	"USD",
-	"EUR",
-	"JPY",
-	"GBP",
-	"CNY",
-	"AUD",
-	"CAD",
-	"CHF",
-	"HKD",
-	"RUB",
+	USD,
+	EUR,
+	JPY,
+	GBP,
+	CNY,
+	AUD,
+	CAD,
+	CHF,
+	HKD,
+	RUB,
 }, len(currencies)
 var names, n = []string{
 	"Noah",
