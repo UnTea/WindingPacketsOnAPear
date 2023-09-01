@@ -1,7 +1,9 @@
 package util
 
 import (
+	"fmt"
 	"math/rand"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -626,11 +628,15 @@ var professions, p = []string{
 }, len(professions)
 
 func init() {
-	rand.New(rand.NewSource(time.Now().UnixNano()))
+	rand.New(rand.NewSource(time.Now().UTC().UnixNano()))
 }
 
-func RandomInt(min, max int64) int64 {
-	return min + rand.Int63n(max-min+1)
+func RandomInt64(min, max int64) int64 {
+	return rand.Int63n(max-min) + min
+}
+
+func RandomInt(min, max int) int {
+	return rand.Intn(max-min) + min
 }
 
 func randomElement(container []string, len int) string {
@@ -638,17 +644,21 @@ func randomElement(container []string, len int) string {
 }
 
 func RandomOwner() string {
-	var sb strings.Builder
-
-	sb.WriteString(randomElement(names, n) + " " + randomElement(surnames, s) + " " + randomElement(professions, p))
-
-	return sb.String()
+	return randomElement(names, n) + " " + randomElement(surnames, s) + " " + randomElement(professions, p)
 }
 
 func RandomMoney() int64 {
-	return RandomInt(0, 1000)
+	return RandomInt64(0, 1000)
 }
 
 func RandomCurrency() string {
 	return randomElement(currencies, c)
+}
+
+func RandomEmail() string {
+	return fmt.Sprintf("%s@email.com", strings.ReplaceAll(RandomOwner(), " ", "")+strconv.Itoa(RandomInt(1901, 2023)))
+}
+
+func RandomUsername() string {
+	return fmt.Sprintf("%s@email.com", strconv.Itoa(RandomInt(1901, 2023))+strings.ReplaceAll(RandomOwner(), " ", ""))
 }
