@@ -4,11 +4,10 @@ import (
 	"database/sql"
 	"log"
 
-	_ "github.com/lib/pq"
-
 	"github.com/UnTea/WindingPacketsOnAPear/api"
 	db "github.com/UnTea/WindingPacketsOnAPear/db/sqlc"
 	"github.com/UnTea/WindingPacketsOnAPear/util"
+	_ "github.com/lib/pq"
 )
 
 func main() {
