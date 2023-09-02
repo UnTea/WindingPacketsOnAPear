@@ -1,8 +1,6 @@
 package api
 
 import (
-	"log"
-
 	db "github.com/UnTea/WindingPacketsOnAPear/db/sqlc"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -20,9 +18,13 @@ func NewServer(store db.Store) *Server {
 	router := gin.Default()
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
-		_ = v.RegisterValidation("currency", validCurrency)
-		// TODO: handle error
+		err := v.RegisterValidation("currency", validCurrency)
+		if err != nil {
+			errorResponse(err)
+		}
 	}
+
+	router.POST("/users", server.createUser)
 
 	router.POST("/accounts", server.createAccount)
 	router.GET("/accounts/:id", server.getAccount)
@@ -34,7 +36,7 @@ func NewServer(store db.Store) *Server {
 	server.router = router
 	err := server.router.SetTrustedProxies(nil)
 	if err != nil {
-		log.Println("cannot set trusted proxies parameter: ", err)
+		errorResponse(err)
 	}
 
 	return server
