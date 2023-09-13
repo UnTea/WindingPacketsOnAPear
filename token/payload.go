@@ -46,10 +46,12 @@ func (p Payload) Valid() error {
 	return nil
 }
 
+// GetExpirationTime returns ExpireAt field
 func (p Payload) GetExpirationTime() (*jwt.NumericDate, error) {
 	return jwt.NewNumericDate(p.ExpireAt), nil
 }
 
+// GetIssuedAt returns IssuedAt field
 func (p Payload) GetIssuedAt() (*jwt.NumericDate, error) {
 	return jwt.NewNumericDate(p.IssuedAt), nil
 }
