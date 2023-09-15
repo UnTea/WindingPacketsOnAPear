@@ -671,7 +671,7 @@ func RandomEmail() string {
 
 // RandomUsername generates a random username
 func RandomUsername() string {
-	return fmt.Sprintf("%s@email.com", strconv.Itoa(RandomInt(1901, 2023))+strings.ReplaceAll(RandomOwner(), " ", ""))
+	return strconv.Itoa(RandomInt(1901, 2023)) + strings.ReplaceAll(RandomOwner(), " ", "")
 }
 
 // RandomString generates a random string of length n

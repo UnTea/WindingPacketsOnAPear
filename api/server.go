@@ -32,8 +32,6 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 		config:     config,
 	}
 
-	router := gin.Default()
-
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		err := v.RegisterValidation("currency", validCurrency)
 		if err != nil {
@@ -41,7 +39,15 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 		}
 	}
 
+	server.setupRouter()
+	return server, nil
+}
+
+func (server *Server) setupRouter() {
+	router := gin.Default()
+
 	router.POST("/users", server.createUser)
+	router.POST("/users/login", server.loginUser)
 
 	router.POST("/accounts", server.createAccount)
 	router.GET("/accounts/:id", server.getAccount)
@@ -51,12 +57,10 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 	router.POST("/transfers", server.createTransfer)
 
 	server.router = router
-	err = server.router.SetTrustedProxies(nil)
+	err := server.router.SetTrustedProxies(nil)
 	if err != nil {
 		errorResponse(err)
 	}
-
-	return server, nil
 }
 
 // Start runs the HTTP server on a specific address
