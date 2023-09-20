@@ -4,9 +4,11 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	db "github.com/UnTea/WindingPacketsOnAPear/db/sqlc"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	db "github.com/UnTea/WindingPacketsOnAPear/db/sqlc"
+	"github.com/UnTea/WindingPacketsOnAPear/token"
+	"github.com/gin-gonic/gin"
 )
 
 type transferRequest struct {
@@ -17,24 +19,33 @@ type transferRequest struct {
 }
 
 func (server *Server) createTransfer(ctx *gin.Context) {
-	var req transferRequest
-	if err := ctx.ShouldBindJSON(&req); err != nil {
+	var request transferRequest
+	if err := ctx.ShouldBindJSON(&request); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
 
-	if !server.validAccount(ctx, req.FromAccountID, req.Currency) {
+	fromAccount, valid := server.validAccount(ctx, request.FromAccountID, request.Currency)
+	if !valid {
 		return
 	}
 
-	if !server.validAccount(ctx, req.ToAccount, req.Currency) {
+	authorizationPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+	if fromAccount.Owner != authorizationPayload.Username {
+		err := errors.New("from account doesn't belong to the authenticated user")
+		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
+		return
+	}
+
+	_, valid = server.validAccount(ctx, request.ToAccount, request.Currency)
+	if !valid {
 		return
 	}
 
 	arg := db.TransferTxParams{
-		FromAccountID: req.FromAccountID,
-		ToAccountID:   req.ToAccount,
-		Amount:        req.Amount,
+		FromAccountID: request.FromAccountID,
+		ToAccountID:   request.ToAccount,
+		Amount:        request.Amount,
 	}
 
 	result, err := server.store.TransferTx(ctx, arg)
@@ -46,23 +57,23 @@ func (server *Server) createTransfer(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, result)
 }
 
-func (server *Server) validAccount(ctx *gin.Context, accountID int64, currency string) bool {
+func (server *Server) validAccount(ctx *gin.Context, accountID int64, currency string) (db.Account, bool) {
 	account, err := server.store.GetAccount(ctx, accountID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			ctx.JSON(http.StatusNotFound, errorResponse(err))
-			return false
+			return account, false
 		}
 
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-		return false
+		return account, false
 	}
 
 	if account.Currency != currency {
 		err := fmt.Errorf("account [%d] currency missmatch: %s vs %s", accountID, account.Currency, currency)
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
-		return false
+		return account, false
 	}
 
-	return true
+	return account, true
 }

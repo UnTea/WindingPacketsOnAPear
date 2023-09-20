@@ -49,16 +49,16 @@ func (server *Server) setupRouter() {
 	router.POST("/users", server.createUser)
 	router.POST("/users/login", server.loginUser)
 
-	router.POST("/accounts", server.createAccount)
-	router.GET("/accounts/:id", server.getAccount)
-	router.GET("/accounts", server.listAccounts)
-	router.DELETE("/accounts/:id", server.deleteAccount)
+	authorizationRoute := router.Group("/").Use(authorizationMiddleware(server.tokenMaker))
 
-	router.POST("/transfers", server.createTransfer)
+	authorizationRoute.POST("/accounts", server.createAccount)
+	authorizationRoute.GET("/accounts/:id", server.getAccount)
+	authorizationRoute.GET("/accounts", server.listAccounts)
+
+	authorizationRoute.POST("/transfers", server.createTransfer)
 
 	server.router = router
-	err := server.router.SetTrustedProxies(nil)
-	if err != nil {
+	if err := server.router.SetTrustedProxies(nil); err != nil {
 		errorResponse(err)
 	}
 }
