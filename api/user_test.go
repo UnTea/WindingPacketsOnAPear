@@ -135,20 +135,18 @@ func TestCreateUserAPI(t *testing.T) {
 		},
 	}
 
-	for i := range testCases {
-		tc := testCases[i]
-
-		t.Run(tc.name, func(t *testing.T) {
+	for _, test := range testCases {
+		t.Run(test.name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
 			store := mockdb.NewMockStore(ctrl)
-			tc.buildStubs(store)
+			test.buildStubs(store)
 
 			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
-			data, err := json.Marshal(tc.body)
+			data, err := json.Marshal(test.body)
 			require.NoError(t, err)
 
 			url := "/users"
@@ -156,7 +154,7 @@ func TestCreateUserAPI(t *testing.T) {
 			require.NoError(t, err)
 
 			server.router.ServeHTTP(recorder, request)
-			tc.checkResponse(recorder)
+			test.checkResponse(recorder)
 		})
 	}
 }
