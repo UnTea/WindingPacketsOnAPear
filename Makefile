@@ -2,7 +2,7 @@ mockgen:
 	mockgen -package mockdb -destination db/mock/store.go github.com/UnTea/WindingPacketsOnAPear/db/sqlc Store
 
 initps:
-	docker run --name postgres_db -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -d postgres:15-alpine3.18
+	docker run --name postgres_db --network bank_network -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -d postgres:15-alpine3.18
 
 startps:
 	docker start postgres_db
